@@ -27,18 +27,20 @@ Task.runTask = function (grunt, options, file, next) {
     return path.resolve(f);
   });
 
-  // Expand file globs (ex: src/**/*.js)
-  var external = [];
-  options.external.forEach(function(id) {
-    if (id.match(':')) {
-      external.push(id);
-    } else {
-      return grunt.file.expand({filter: 'isFile'}, id).forEach(function (f) {
-        external.push(path.resolve(f));
-      });
-    }
-  });
-  options.external = external;
+  if (options.external) {
+    // Expand file globs (ex: src/**/*.js)
+    var external = [];
+    options.external.forEach(function(id) {
+      if (id.match(':')) {
+        external.push(id);
+      } else {
+        return grunt.file.expand({filter: 'isFile'}, id).forEach(function (f) {
+          external.push(path.resolve(f));
+        });
+      }
+    });
+    options.external = external;
+  }
 
   runner.run(files, file.dest, options, next);
 };
